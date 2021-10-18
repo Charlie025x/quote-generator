@@ -1,13 +1,27 @@
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 
+//random quote function
+// let randomQuote = () => {
+//   quote = items[Math.floor(Math.random() * items.length)]
+//   return quote
+// }
+ 
+// render quote function
+let renderQuote = (item, index) => (
+  index === 100 ?
+  <li key={index}>
+      {index} | {item.text} | {item.author} | 
+  </li> : ''
+)
 class QuoteContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        // error: null,
+        error: null,
         isLoaded: false,
-        items: []
+        items: [],
+        itemsLength: null,
         // apiQuotes: []
         };
     }
@@ -18,15 +32,14 @@ class QuoteContainer extends React.Component {
         .then(json => {
             this.setState({
                 isLoaded: true,
-                items: json,
+                items: json
             })
         })
       }
+
     
       render() {
-        // Pick a random quote from apiQuotes array
-        // const item = items[Math.floor(Math.random() * items.length)];
-
+        let rand = Math.floor(Math.random() * this.state.items.length)
         const { error, isLoaded, items } = this.state;
         if (error) {
           return <div>Error: {error.message}</div>;
@@ -35,10 +48,12 @@ class QuoteContainer extends React.Component {
         } else {
           return (
             <ul>
+              { this.state.items.length }
               {items.map((item, index) => (
-                  <li key={index}>
-                      {index} | {item.text} | {item.author}
-                  </li>
+                index === rand ?
+                <li key={index}>
+                    {index} | {item.text} | {item.author}
+                </li> : ''
               ))}
             </ul>
           );
