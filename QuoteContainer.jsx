@@ -1,27 +1,15 @@
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 
-//random quote function
-// let randomQuote = () => {
-//   quote = items[Math.floor(Math.random() * items.length)]
-//   return quote
-// }
- 
-// render quote function
-let renderQuote = (item, index) => (
-  index === 100 ?
-  <li key={index}>
-      {index} | {item.text} | {item.author} | 
-  </li> : ''
-)
+
 class QuoteContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
         error: null,
         isLoaded: false,
-        items: [],
-        itemsLength: null,
+        quotes: [],
+        quotesLength: null,
         // apiQuotes: []
         };
     }
@@ -32,15 +20,28 @@ class QuoteContainer extends React.Component {
         .then(json => {
             this.setState({
                 isLoaded: true,
-                items: json
+                quotes: json
             })
         })
       }
 
     
-      render() {
-        let rand = Math.floor(Math.random() * this.state.items.length)
-        const { error, isLoaded, items } = this.state;
+      render() { 
+        const { error, isLoaded, quotes } = this.state;
+
+        let rand = Math.floor(Math.random() * quotes.length) // selects a random index no greater than quotes' length
+        
+        // render quote function
+        let renderQuote = () => (
+          quotes.map((quote, index) => (
+          index === rand ?
+          <li key={index}>
+              {index} | {quote.text} | {quote.author} | 
+          </li> : ''
+          ))
+        )
+
+
         if (error) {
           return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -48,42 +49,74 @@ class QuoteContainer extends React.Component {
         } else {
           return (
             <ul>
-              { this.state.items.length }
-              {items.map((item, index) => (
+              {/* following code was moved to renderQuote function */}
+              {/* {quotes.map((quote, index) => (
                 index === rand ?
                 <li key={index}>
-                    {index} | {item.text} | {item.author}
+                    {index} | {quote.text} | {quote.author}
                 </li> : ''
-              ))}
+              ))} */}
+              { renderQuote() }
             </ul>
           );
         }
       }
     
       
-    // render() {
-    //     const { items } = this.state;
-    //     return(
-    //         <div className="quote-container" id="quote-container">
-    //             {/* Quote */}
-    //             <div className="quote-text">
-    //                 <i className="fas fa-quote-left"></i>
-    //                 <span id="quote">{}</span>
-    //             </div>
-    //             {/* Author */}
-    //             <div className="quote-author">
-    //                 <span id="author"></span>
-    //             </div>
-    //             {/* Buttons */}
-    //             <div className="button-container">
-    //                 <button className="twitter-button" id="twitter" title="Tweet This!">
-    //                     <i className="fab fa-twitter"></i>
-    //                 </button>
-    //                 <button id="new-quote">New Quote</button>
-    //             </div>
-    //         </div>    
-    //     )
-    // }
+    render() {
+      const { quotes } = this.state;
+
+      let rand = Math.floor(Math.random() * quotes.length)
+
+      // renderQuote function
+      let renderQuote = () => (
+        quotes.map((quote, index) => (
+          index === rand ? // sellects a random quote from quotes
+          <div key="index">
+            {/* Quote , print quote's text */}
+            <div className="quote-text">
+                <i className="fas fa-quote-left"></i>
+                <span id="quote">{ quote.text }</span>
+            </div>
+            {/* Author , prind quote's author */}
+            <div className="quote-author">
+                <span id="author">{ quote.author }</span>
+            </div>
+          </div>
+          : '' // don't print anything if the quote isn't selected
+        ))
+      )
+      return(
+          <div className="quote-container" id="quote-container">
+            
+            {/* {quotes.map((quote, index) => (
+              index === rand ? // sellects a random quote from quotes
+              <div key="index">
+                {/* Quote , print quote's text 
+                <div className="quote-text">
+                    <i className="fas fa-quote-left"></i>
+                    <span id="quote">{ quote.text }</span>
+                </div>
+                {/* Author , prind quote's author 
+                <div className="quote-author">
+                    <span id="author">{ quote.author }</span>
+                </div>
+              </div>
+              : '' // don't print anything if the quote isn't selected
+            ))} */}
+
+            { renderQuote() }
+
+              {/* Buttons */}
+              <div className="button-container">
+                  <button onClick={renderQuote} className="twitter-button" id="twitter" title="Tweet This!">
+                      <i className="fab fa-twitter"></i>
+                  </button>
+                  <button id="new-quote">New Quote</button>
+              </div>
+          </div>    
+      )
+    }
 }
 
 // ReactDOM.render(
